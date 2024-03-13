@@ -7,7 +7,6 @@ import os
 import config
 import multiprocessing
 import logging
-from job_manager import start_processing
 from file_reader import read_structure_parameters, read_scene_descriptions
 from job_payload_creator import create_job_payloads
 from trigger import start_trigger_update
@@ -26,6 +25,15 @@ def read_trigger_file(file_path):
 
 def main():
     logging.info("Script started.")
+
+    if config.API_TYPE == 'COMFY':
+        from comfy_job_manager import start_processing
+    elif config.API_TYPE == 'LEONARDO':
+        from leo_job_manager import start_processing 
+    else:
+        print(f"Invalid API_TYPE: {config.API_TYPE}. Currently supports 'LEONARDO' or 'COMFY'")
+        exit()
+
 
     # Define the path to the 'downloaded_images' folder relative to the current script
     script_dir = os.path.dirname(os.path.abspath(__file__))

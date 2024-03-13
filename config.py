@@ -15,7 +15,7 @@ USE_TRIGGER_FILE = False
 ## Slideshow :
 # Set to True to see full screen image
 # As they get downloaded in /downloaded_images
-SLIDESHOW_ENABLED = False
+SLIDESHOW_ENABLED = True
 FADE_SPEED = 0.01
 
 ## Conversation Mode
@@ -52,10 +52,20 @@ TRIGGER_FILE_PATH = 'config-files/trigger.txt'
 IMAGE_FOLDER_PATH = 'downloaded_images'
 STRUCTURE_CSV_PATH = 'config-files/structure.csv'
 SCENES_FILE_PATH = 'config-files/scene.csv'
-CONFIG_FILE_PATH = 'config-files/leonardo.json'
 
 # Initialize config_data as None
 config_data = None
+
+# API Type - Current Options are "LEONARDO, COMFY" (Defaults to LEONARDO)
+API_TYPE = 'COMFY' 
+
+if API_TYPE == 'COMFY':
+    CONFIG_FILE_PATH = 'config-files/comfy.json'
+elif API_TYPE == 'LEONARDO':
+    CONFIG_FILE_PATH = 'config-files/leonardo.json'
+else:
+    print(f"Invalid API_TYPE: {API_TYPE}. Currently supports 'LEONARDO' or 'COMFY'")
+    exit()
 
 # Load configuration data
 try:
@@ -74,37 +84,47 @@ JOB_STATUS_CHECK_DELAY = timedelta(seconds=30)
 RATE_LIMIT_DELAY = timedelta(seconds=2)
 API_CALL_DELAY = 3
 
-## Array of model to use randomly
-MODEL_IDS = '["5c232a9e-9061-4777-980a-ddc8e65647c6", "1e60896f-3c26-4296-8ecc-53e2afecc132"]'
 
-## If your leonardo.jsonf failed to load locally
-# Leonardo settings
-ALCHEMY = config_data.get("ALCHEMY", True)
-CONTRAST_RATIO = config_data.get("CONTRAST_RATIO", 0.5)
-PROMPT_MAGIC = config_data.get("PROMPT_MAGIC", True)
-PROMPT_MAGIC_STRENGTH = config_data.get("PROMPT_MAGIC_STRENGTH", 0.5)
-PROMPT_MAGIC_VERSION = config_data.get("PROMPT_MAGIC_VERSION", "v3")
-PUBLIC = config_data.get("PUBLIC", False)
-SCHEDULER = config_data.get("SCHEDULER", "LEONARDO")
-NSFW = config_data.get("NSFW", True)
-NUM_IMAGES = config_data.get("NUM_IMAGES", 1)
-PRESET_STYLE = config_data.get("PRESET_STYLE", "RAYTRACED")
-PHOTOREALSTRENGTH = config_data.get("PHOTOREALSTRENGTH", 0.55)
-EXPANDED_DOMAIN = config_data.get("EXPANDED_DOMAIN", False)
-GUIDANCE_SCALE = config_data.get("GUIDANCE_SCALE", 15)
-NUM_INFERENCE_STEPS = config_data.get("NUM_INFERENCE_STEPS", 10)
-HIGH_CONTRAST = config_data.get("HIGH_CONTRAST", True)
-WEIGHTING = config_data.get("WEIGHTING", 0.75)
-SD_VERSION = config_data.get("SD_VERSION", "v1_5")
-PHOTO_REAL = config_data.get("PHOTO_REAL", False)
+if API_TYPE == 'LEONARDO':
+    ## Array of model to use randomly
+    MODEL_IDS = '["5c232a9e-9061-4777-980a-ddc8e65647c6", "1e60896f-3c26-4296-8ecc-53e2afecc132"]'
 
-# API settings
-API_BASE_URL = 'https://cloud.leonardo.ai/api/rest/v1/'
-AUTHORIZATION_TOKEN = 'Bearer [Insert API KEY]'
+    ## If your leonardo.jsonf failed to load locally
+    # Leonardo settings
+    ALCHEMY = config_data.get("ALCHEMY", True)
+    CONTRAST_RATIO = config_data.get("CONTRAST_RATIO", 0.5)
+    PROMPT_MAGIC = config_data.get("PROMPT_MAGIC", True)
+    PROMPT_MAGIC_STRENGTH = config_data.get("PROMPT_MAGIC_STRENGTH", 0.5)
+    PROMPT_MAGIC_VERSION = config_data.get("PROMPT_MAGIC_VERSION", "v3")
+    PUBLIC = config_data.get("PUBLIC", False)
+    SCHEDULER = config_data.get("SCHEDULER", "LEONARDO")
+    NSFW = config_data.get("NSFW", True)
+    NUM_IMAGES = config_data.get("NUM_IMAGES", 1)
+    PRESET_STYLE = config_data.get("PRESET_STYLE", "RAYTRACED")
+    PHOTOREALSTRENGTH = config_data.get("PHOTOREALSTRENGTH", 0.55)
+    EXPANDED_DOMAIN = config_data.get("EXPANDED_DOMAIN", False)
+    GUIDANCE_SCALE = config_data.get("GUIDANCE_SCALE", 15)
+    NUM_INFERENCE_STEPS = config_data.get("NUM_INFERENCE_STEPS", 10)
+    HIGH_CONTRAST = config_data.get("HIGH_CONTRAST", True)
+    WEIGHTING = config_data.get("WEIGHTING", 0.75)
+    SD_VERSION = config_data.get("SD_VERSION", "v1_5")
+    PHOTO_REAL = config_data.get("PHOTO_REAL", False)
+
+    # API settings
+    API_BASE_URL = 'https://cloud.leonardo.ai/api/rest/v1/'
+    AUTHORIZATION_TOKEN = 'Bearer [Insert API KEY]'
+
+
+    # Headers with the authorization token for API calls
+    HEADERS = {
+        "accept": "application/json",
+        "authorization": AUTHORIZATION_TOKEN
+    }
+elif API_TYPE == 'COMFY':
+    COMFY_PAYLOAD = config_data
+    PROMPT_NODE = "6"
+else:
+    print(f"Invalid API_TYPE: {API_TYPE}. Currently supports 'LEONARDO' or 'COMFY'")
+    exit()
+
 OPENAI_API_KEY = '[Insert API KEY]'
-
-# Headers with the authorization token for API calls
-HEADERS = {
-    "accept": "application/json",
-    "authorization": AUTHORIZATION_TOKEN
-}

@@ -22,6 +22,7 @@ python -m pip install requests
 python -m pip install scikit-learn
 python -m pip install openai
 python -m pip install piexif
+python -m pip install websocket-client
 
 REM Check if last command was successful
 if %errorlevel% neq 0 (

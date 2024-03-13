@@ -14,9 +14,6 @@ def create_job_payloads(structure_params, scene_descriptions, num_images_to_gene
     prompts = []  # List to store prompts associated with each payload
     used_prompts = set()  # Added to track used prompts
 
-    # Parse MODEL_IDS from config
-    model_ids = json.loads(config.MODEL_IDS)
-
     # random.shuffle(scene_descriptions['Scene Description'])  # Shuffle scene descriptions
     scene_descriptions_list = scene_descriptions['Scene Description']
     for key in structure_params:  # Shuffle each parameter list
@@ -59,36 +56,46 @@ def create_job_payloads(structure_params, scene_descriptions, num_images_to_gene
             # Replace "presetStyle": config.PRESET_STYLE,
             random_style = random.choice(styles)
 
-            # Select a random model ID
-            model_id = random.choice(model_ids)
 
-            # Override code. Uncomment to have fixed environment
-            if hasattr(config, 'OVERRIDE_STRING'):
-                prompt = re.sub("<SCENE>", scene, config.OVERRIDE_STRING)
-                random_style = config.OVERRIDE_STYLE
-                model_id = config.OVERRIDE_MODEL
+            if config.API_TYPE == 'COMFY':
+                if hasattr(config, 'OVERRIDE_STRING'):
+                    prompt = re.sub("<SCENE>", scene, config.OVERRIDE_STRING)
+                payload = config.COMFY_PAYLOAD
+                payload[config.PROMPT_NODE]["inputs"]["text"] = prompt
 
-            payload = {
-                "height": config.IMAGE_HEIGHT,
-                "modelId": model_id,
-                "prompt": prompt,
-                "width": config.IMAGE_WIDTH,
-                "alchemy": config.ALCHEMY,
-                "contrastRatio": config.CONTRAST_RATIO,
-                "promptMagic": config.PROMPT_MAGIC,
-                "public": config.PUBLIC,
-                "scheduler": config.SCHEDULER,
-                "nsfw": config.NSFW,
-                "num_images": config.NUM_IMAGES,
-                "presetStyle": random_style,
-                "photoRealStrength": config.PHOTOREALSTRENGTH,
-                "guidance_scale": config.GUIDANCE_SCALE,
-                "num_inference_steps": config.NUM_INFERENCE_STEPS,
-                "highContrast": config.HIGH_CONTRAST,
-                "weighting": config.WEIGHTING,
-                "sd_version": config.SD_VERSION,
-                "photoReal": config.PHOTO_REAL
-            }
+            else: # LEONARDO
+                # Parse MODEL_IDS from config
+                model_ids = json.loads(config.MODEL_IDS)
+        
+                # Select a random model ID
+                model_id = random.choice(model_ids)
+
+                # Override code. Uncomment to have fixed environment
+                if hasattr(config, 'OVERRIDE_STRING'):
+                    prompt = re.sub("<SCENE>", scene, config.OVERRIDE_STRING)
+                    random_style = config.OVERRIDE_STYLE
+                    model_id = config.OVERRIDE_MODEL
+                payload = {
+                    "height": config.IMAGE_HEIGHT,
+                    "modelId": model_id,
+                    "prompt": prompt,
+                    "width": config.IMAGE_WIDTH,
+                    "alchemy": config.ALCHEMY,
+                    "contrastRatio": config.CONTRAST_RATIO,
+                    "promptMagic": config.PROMPT_MAGIC,
+                    "public": config.PUBLIC,
+                    "scheduler": config.SCHEDULER,
+                    "nsfw": config.NSFW,
+                    "num_images": config.NUM_IMAGES,
+                    "presetStyle": random_style,
+                    "photoRealStrength": config.PHOTOREALSTRENGTH,
+                    "guidance_scale": config.GUIDANCE_SCALE,
+                    "num_inference_steps": config.NUM_INFERENCE_STEPS,
+                    "highContrast": config.HIGH_CONTRAST,
+                    "weighting": config.WEIGHTING,
+                    "sd_version": config.SD_VERSION,
+                    "photoReal": config.PHOTO_REAL
+                }
 
             job_payloads.append(payload)  # Append the payload after setting the prompt with UID
             # prompts.append(prompt_with_id)  # Store prompt with ID
