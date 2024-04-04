@@ -159,3 +159,8 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 /venv/
+
+## We don't want to push the user's downloaded images or ranking images
+downloaded_images/
+ranking_bad/
+ranking_good/
