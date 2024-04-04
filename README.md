@@ -1,4 +1,4 @@
-# EchoAI: A Journey into Visual Storytelling  
+# EchoAI: A Journey into Visual Storytelling
 
 ## Table of Contents
 - [The First Glimpse of EchoAI](#the-first-glimpse-of-echoai)
