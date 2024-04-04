@@ -4,7 +4,12 @@ import os
 import config
 import logging
 import json
-from job_manager import start_processing
+
+if config.RENDER_MODE is "Comfy":
+    from job_manager_comfy import start_processing 
+else:
+    from job_manager import start_processing
+
 from file_reader import read_structure_parameters, read_scene_descriptions
 from job_payload_creator import create_job_payloads
 from audio import process_audio_file
@@ -79,7 +84,7 @@ def start_process(audio_scenes):
     print(f"Images to Generate: {total_images_to_generate}")
 
     structure_params = read_structure_parameters(config.STRUCTURE_CSV_PATH)
-    job_payloads, prompts = create_job_payloads(structure_params, scene_descriptions, total_images_to_generate, api_type='default')
+    job_payloads, prompts = create_job_payloads(structure_params, scene_descriptions, total_images_to_generate)
     assert job_payloads, "No job payloads were created."
 
     start_processing(job_payloads) # Start processing the jobs

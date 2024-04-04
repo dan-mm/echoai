@@ -264,7 +264,6 @@ def main():
         wait_time(3)
         clear_screen()
 
-    # TODO: this needs to call comfy_job_manager start process, or whatever new way I will do this
     start_process(scenes)
 
     # End time tracker and calculate duration

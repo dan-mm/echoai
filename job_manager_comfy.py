@@ -61,8 +61,11 @@ def get_images(ws, prompt):
     return output_images
 
 def start_processing(prompts):
+    logging.info("CLASS [start_processing]")
     ws = websocket.WebSocket()
     ws.connect("ws://{}/ws?clientId={}".format(server_address, client_id))
     
     for prompt in prompts:
         images = get_images(ws, prompt)
+
+    logging.info("All jobs completed.")

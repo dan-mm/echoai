@@ -15,7 +15,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 render_modes = ["Leonardo","Civitai","Prodia","Midjourney","Dalle"]
 # render_modes = ["Civitai","Leonardo","Prodia"]
 
-def create_job_payloads(structure_params, scene_descriptions, num_images_to_generate, api_type='default'):
+def create_job_payloads(structure_params, scene_descriptions, num_images_to_generate):
     logging.info("Creating job payloads...")
     job_payloads, prompts, scene_index = [], [], 0  # Initialize lists and scene index in one line
 
@@ -68,7 +68,7 @@ def create_job_payloads(structure_params, scene_descriptions, num_images_to_gene
                     probabilities_value = {
                         "Leonardo": config.LEONARDO_RATE,
                         "Prodia": config.PRODIA_RATE,
-                        "Mdijourney": config.MIDJOURNEY_RATE,
+                        "Midjourney": config.MIDJOURNEY_RATE,
                         "Dalle": config.DALLE_RATE
                     }.get(config.RENDER_MODE, 0.5)
 
@@ -93,7 +93,7 @@ def create_job_payloads(structure_params, scene_descriptions, num_images_to_gene
                     # Randomly select a model ids
                     model_id = random.choice(model_ids)
 
-                # SECTION 1.3 End of hte Override Mode, now processing the final rules
+                # SECTION 1.3 End of the Override Mode, now processing the final rules
                 # Add ratio directly in the prompt if midjourney
                 prompt += " --fast --ar 9:16 --v 6" if config.RENDER_MODE == 'Midjourney' and config.IMAGE_HEIGHT > config.IMAGE_WIDTH else " --fast --ar 16:9 --v 6" if config.RENDER_MODE == 'Midjourney' else ""
 
